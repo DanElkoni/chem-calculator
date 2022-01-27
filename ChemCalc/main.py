@@ -18,6 +18,15 @@ def round_up(n, decimals=2):
     multiplier = 10 ** decimals
     return math.ceil(n * multiplier) / multiplier
 
+#Conversion
+def calcGramToMol(massOfComp):
+    grams = input('How many grams of this compound would you like to convert to mol? ')
+    print(f'{grams}g of this compound is {round_down(float(grams)/massOfComp, 4)}mol!')
+
+def calcMolToGram(massOfComp):
+    mols = input('How many mols of this compound would you like to convert to grams? ')
+    print(f'{mols}mol(s) of this compound is {round_down(float(mols)*massOfComp, 4)}g!')
+
 #Percentage comp function
 def calculateEPercentInComp():
     totalAtomicMass = 0.0
@@ -61,6 +70,11 @@ def calculateEPercentInComp():
 
     #Close data table file    
     dataTable.close()
+    quickAns = input('Would you like to convert from m-g(mols to grams) or g-m(grams to mols)? ').lower()
+    if quickAns == 'g-m':
+        calcGramToMol(totalAtomicMass)
+    elif quickAns == 'm-g':
+        calcMolToGram(totalAtomicMass)
 
 #Call function
 calculateEPercentInComp()
