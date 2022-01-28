@@ -116,5 +116,20 @@ def calcMolToGram(massOfComp):
     molecules = round_down(mols * 6.32, 4) * 10**23
     print(f'{mols}mol(s) of this compound is {round_down(gs, 4)}g! Which has {molecules} molecules of {displayCompound}')
 
+def startFunc():
+    if input('Would you like to get data from a logged compound, or a new one(l/n)? ') == 'l':
+        quickAns = input('What compound would you like to look at? ')
+        if quickAns in compounds:
+            print(f'The mass of one mol of {quickAns} is {compounds[compounds.index(quickAns) + 1]}g!')
+            if input('Would you like to input a new compound(y/n)?') == 'y':
+                calculateEPercentInComp()
+            else:
+                pass
+        else:
+            print('Sorry, but your compound isnt logged yet, youll have to input a new one!')
+            calculateEPercentInComp()
+    else:
+        calculateEPercentInComp()
+
 #Call function
-calculateEPercentInComp()
+startFunc()
