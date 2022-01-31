@@ -1,7 +1,7 @@
 # **chem-calculator**
 ## **Small chemistry calculator to help anyone who needs it!**
-Heres a small chemistry calculator to help with all kinds of chemistry calculations!</br>
-Developed by Fallvirus009 (Daniel Elkoni) 
+Heres a small chemistry calculator to help with all kinds of chemistry calculations! Feel free to change around, mess with the code, and try your own functions. If you do distribute or use **ANY** of this code for commercial purposes, all I ask is you link this github page. Thanks for stopping by!</br>
+Developed by Fallvirus009 (Daniel Elkoni)
 ## **UPDATE LOG:**
 ### **Chemistry Calculator v0.0.1:**
 Has some features currently, gonna expand and add gui along the line
