@@ -1,4 +1,3 @@
-from tkinter import *
 from tkinter import ttk
 import math
 import os
@@ -116,9 +115,10 @@ def addOnes(compound):
 	i = 0
 
 	while i < len(compound)-1:
-		if compound[i+1] not in numbers:
-			compound.insert(i+1, '1')
-			i += 1   
+		if compound[i] not in numbers:
+			if compound[i+1] not in numbers:
+				compound.insert(i+1, '1')
+				i += 1   
 		i += 1
 	if compound[len(compound)-1] not in numbers:
 		compound.append('1')
