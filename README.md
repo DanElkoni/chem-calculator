@@ -10,5 +10,6 @@ After gram to mol or mol to gram converison the number of molecules of your comp
 ### **UPDATE v0.0.4:**
 Added a logging compounds function which tracks the name and molar mass, just a quick addition for the start!
 ### **UPDATE v.0.0.6**
-Bunch of new stuff, faster cleaner code, rewritten functions (not messy this time), and the big, big thing... **GUI**!!!!  
-Finally added a functioning working GUI, which works and looks great!
+Bunch of new stuff, faster cleaner code, rewritten functions (not messy this time), and the big, big thing... **GUI**!!!! </br>
+Finally added a functioning working GUI, which works and looks great! </br>
+Use the bottom box to log your elements with their masses, then you can enter your compound name with element amounts up to **1000**
