@@ -1,135 +1,157 @@
+from tkinter import *
+from tkinter import ttk
 import math
 import os
+# Initial vars
+numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99]
+rawComp = ''
 
+# Data prep
 full_path = os.path.realpath(__file__)
 
-# Prepping data
 dataTable = open(f'{os.path.dirname(full_path)}\data.text', 'a+')
 dataTable.seek(0)
 data = dataTable.readlines()
 
-compoundTable = open(f'{os.path.dirname(full_path)}\compounds.text', 'a+')
-compoundTable.seek(0)
-compounds = compoundTable.readlines()
-
 for i in range(len(data)):
-  data[i] = data[i].strip('\n')
-for i in range(len(compounds)):
-  compounds[i] = compounds[i].strip('\n')
+	data[i] = data[i].strip('\n')
 
 dataTable.seek(2)
-compoundTable.seek(2)
 
-#Rounding functions
+# Rounding Functions
 def round_down(n, decimals):
-    multiplier = 10 ** decimals
-    return int(n * multiplier) / multiplier
+	multiplier = 10 ** decimals
+	return int(n * multiplier) / multiplier
 def round_up(n, decimals=2):
-    multiplier = 10 ** decimals
-    return math.ceil(n * multiplier) / multiplier
+	multiplier = 10 ** decimals
+	return math.ceil(n * multiplier) / multiplier
 
-#Percentage comp function
-def calculateEPercentInComp():
-    totalAtomicMass = 0.0
-    listTotalAtomicMasses = []
-    elements = []
-    noOfAtoms = 0
-    atomicMassOfAtom = 0
-    global compound
-    compound = ''
+# WINDOW AND GUI DEFINING ->
+# Window defining
+root = Tk()
+root.geometry('450x300')
+root.resizable(False, False)
+root.title('Chemistry Calculator')
 
-    elements = input('Enter the elements in the compound seperated by space: ').split()
+# Title style
+titleStyle = ttk.Style()
+titleStyle.configure('big.TLabel', font=('Helvetica', 15))
 
-    #Calculation and data collection
-    for i in range(len(elements)):
-        noOfAtoms = input(f'How many {elements[i]} atoms are there in your compound? ')
-        
-        compound += (elements[i])
-        compound += (noOfAtoms)
+mainTitle = ttk.Label(text="Welcome to the Chemistry Calculator!", style='big.TLabel')
+mainTitle.pack()
 
-        #Determining whether data has been inputted before
-        if elements[i] in data:
-          atomicMassOfAtom = data[data.index(elements[i]) + 1]
-          print(f'{elements[i]} has a mass of {atomicMassOfAtom}')
-        
-        else:
-          atomicMassOfAtom = input(f'What is the atomic mass of a(n) {elements[i]} atom, rounded to the nearest hundreds place? ')
+labelStyle = ttk.Style()
+labelStyle.configure('medium.TLabel', font=('Helvetica', 13), padding=3)
 
-          #Writing new data
-          dataTable.write(f'{elements[i]}\n{atomicMassOfAtom}\n')
+firstLabel = ttk.Label(text='Enter a compound formula!', style='medium.TLabel')
+firstLabel.place(x=0,y=40)
 
-        listTotalAtomicMasses.append(float(noOfAtoms) * float(atomicMassOfAtom))
-        totalAtomicMass += float(listTotalAtomicMasses[i])
+# Comp entry box
+compEntryBox = ttk.Entry(root)
+compEntryBox.place(width=167,x=210,y=44)
 
-    #Convert to a more readable and understandable display
-    global displayCompound
-    displayCompound = ''
+def getComp():
+	rawComp = split(compEntryBox.get())
+	global displayComp
+	displayComp = compEntryBox.get()
+	compEntryBox.delete(0, END)
+	addOnes(rawComp)
+	print(rawComp)
 
-    for i in range(len(compound)):
-      if compound[i] == '1' and compound[i+1] not in [0,1,2,3,4,5,6,7,8,9]:
-        pass
-      else:
-        displayCompound += compound[i]
+# Comp box Button
+entryButton = ttk.Button(text='Enter!', command=getComp)
+entryButton.place(width=50,x=390,y=41)
 
-    #Looks for and logs compound in compounds.text
-    if compound in compounds:
-        pass
-    else:
-        compoundTable.write(f'{compound}\n')
-        compoundTable.write(f'{totalAtomicMass}\n')
+# Label and entry for masses
+massLabel = ttk.Label(text='Enter element symbol then mass: ', style='medium.TLabel')
+massLabel.place(x=0, y=70)
 
-    print(f'The total atomic mass of {displayCompound} is: {round_down(totalAtomicMass, 4)}')
+massEntry = ttk.Entry()
+massEntry.place(width=128, x=250, y=74)
 
-    #Rounding function
-    for i in range(len(elements)):
+# Display final info
+infoLabel = ttk.Label(text='Info on your compound here!', style='medium.TLabel')
+infoLabel.pack(anchor='center',pady=70)
 
-        if int(str((listTotalAtomicMasses[i]/totalAtomicMass) *100)[5]) >= 5:
-            print(f'The element {elements[i]} has a total mass of {listTotalAtomicMasses[i]} in {displayCompound} and makes up {round_up((listTotalAtomicMasses[i] / totalAtomicMass) * 100)}% of it!')
+def logElements():
+	symbolMass = massEntry.get()
+	symbolMass = symbolMass.split()
+	if symbolMass[0] not in data:
+		dataTable.write(f'{symbolMass[0]}\n{symbolMass[1]}\n')
+	massEntry.delete(0, END)
 
-        elif int(str((listTotalAtomicMasses[i]/totalAtomicMass) *100)[5]) < 5:
-            print(f'The element {elements[i]} has a total mass of {listTotalAtomicMasses[i]} in {displayCompound} and makes up {round_down((listTotalAtomicMasses[i] / totalAtomicMass) * 100, 2)}% of it!')
+#Button for masses
+entryButtonMass = ttk.Button(text='Enter!', command=logElements)
+entryButtonMass.place(width=50,x=390,y=72)
 
-        else:
-            print(f'The element {elements[i]} has a total mass of {listTotalAtomicMasses[i]} in {displayCompound} and makes up {(listTotalAtomicMasses[i] / totalAtomicMass) * 100}% of it!')
 
-    #Close files    
-    dataTable.close()
-    compoundTable.close()
+# Actual code and functions
+for i in range(len(numbers)):
+    numbers[i] = str(numbers[i])
 
-    #Choose whether to go on
-    quickAns = input('Would you like to convert from m-g(mols to grams) or g-m(grams to mols)? ').lower()
-    if quickAns == 'g-m':
-        calcGramToMol(totalAtomicMass)
-    elif quickAns == 'm-g':
-        calcMolToGram(totalAtomicMass)
+def split(compound):
+    return list(compound)
 
-#Conversion
-def calcGramToMol(massOfComp):
-    grams = input(f'How many grams of {displayCompound} would you like to convert to mol? ')
-    mols = float(grams)/massOfComp
-    molecules = round_down(mols * 6.32, 4) * 10**23
-    print(f'{grams}g of this compound is {round_down(mols, 4)}mol! Which has {molecules} molecules of {displayCompound}')
+def combineStrs(compound):
+	i = 0
+	ix = 0
+	while i < len(compound)-1:
+		if compound[i] in numbers:
+			if compound[i+1] in numbers:
+				compound[i] += compound[i+1]
+				compound.pop(i+1)
+				i += 1
+		i += 1
 
-def calcMolToGram(massOfComp):
-    mols = input(f'How many mols of {displayCompound} would you like to convert to grams? ')
-    gs = float(mols)*massOfComp
-    molecules = round_down(mols * 6.32, 4) * 10**23
-    print(f'{mols}mol(s) of this compound is {round_down(gs, 4)}g! Which has {molecules} molecules of {displayCompound}')
+	while ix < len(compound)-1:
+		if compound[ix] in numbers and compound[ix+1] in numbers:
+			combineStrs(compound)
+		else:
+			ix += 1
 
-def startFunc():
-    if input('Would you like to get data from a logged compound, or a new one(l/n)? ') == 'l':
-        quickAns = input('What compound would you like to look at? ')
-        if quickAns in compounds:
-            print(f'The mass of one mol of {quickAns} is {compounds[compounds.index(quickAns) + 1]}g!')
-            if input('Would you like to input a new compound(y/n)?') == 'y':
-                calculateEPercentInComp()
-            else:
-                pass
-        else:
-            print('Sorry, but your compound isnt logged yet, youll have to input a new one!')
-            calculateEPercentInComp()
-    else:
-        calculateEPercentInComp()
+	calcAllVals(compound)
+	
 
-#Call function
-startFunc()
+def addOnes(compound):
+	i = 0
+
+	while i < len(compound)-1:
+		if compound[i+1] not in numbers:
+			compound.insert(i+1, '1')
+			i += 1   
+		i += 1
+	if compound[len(compound)-1] not in numbers:
+		compound.append('1')
+	combineStrs(compound)
+
+def calcAllVals(compound):
+	dataString = ''
+
+	totalCompMass = 0
+	elements = []
+	elementNum = []
+	i = 0
+	while i < len(compound):
+		elements.append(compound[i])
+		elementNum.append(int(compound[i+1]))
+		i += 2
+
+	for i in range(len(elements)):
+		totalCompMass += elementNum[i] * float(data[data.index(elements[i]) + 1])
+	dataString += f'The total atomic mass of {displayComp} is {totalCompMass}\n'
+	
+	for i in range(len(elements)):
+		percentMass = (elementNum[i] * float(data[data.index(elements[i]) + 1]) / totalCompMass) * 100
+		if int(str(percentMass)[5]) >= 5:
+			percentMass = round_up(percentMass)
+		elif int(str(percentMass)[5]) <= 5:
+			percentMass = round_down(percentMass, 2)
+		dataString += f'The element {elements[i]} makes up %{percentMass} of {displayComp}\n'
+
+	dataString += f'10 grams of {displayComp} is {round_down(10/totalCompMass, 4)} mols!\n'
+
+	infoLabel.configure(text=dataString)
+
+root.mainloop()
+
+dataTable.close()
